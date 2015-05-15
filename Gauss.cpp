@@ -1,53 +1,16 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstdio>
+#include <thread>
 
 
 using namespace std;
 
-
-int main (int argc , char *argv[])
-{	
-
-	double **a, *b, *x;
-	int i,j,k,n;
-	int o,p;
-
-	double fator , sum;
-
-	printf("Entre com o tamanho do vetor: ");
-    scanf("%d", &n);
- 
-
-	a=(double **) malloc((n+1)*sizeof(double *));
-	b=(double *) malloc((n+1)*sizeof(double));
-	x=(double *) malloc((n+1)*sizeof(double));
-	 for(i=0;i < n+1;i++)
-	 {
-	  a[i]=(double *)malloc((n+1)*sizeof(double));
-	 }
-
-	printf("\n Defina a matriz A[%dx%d]\n",n,n);
-
-	for(i=0; i<= n-1; i++)
-	{
-		for(j=0; j<=n-1; j++)
-		{
-			printf("\n a[%d,%d]=  ",i+1,j+1);
-			scanf("%lf",&a[i][j]);
-		}
-	}
-	 
-	printf("\n Defina o vetor B(%d)\n",n);
-	 
-	for(i=0; i<=n-1; i++)
-	{
-	   printf("\n b[%d]=  ",i+1);
-	   scanf("%lf",&b[i]);
-	}
-
-
-	for(k=0;k<=n-2;k++)
+void gauss (int n,double **a,double *b,double *x){
+int i,j,k;
+int o,p;
+double fator , sum;
+for(k=0;k<=n-2;k++)
 	{
 		for(i=k+1;i<=n-1;i++)
 		{
@@ -91,5 +54,51 @@ int main (int argc , char *argv[])
 	{
 		printf("x(%i) = %+g \n",i,x[i]);
 	}
-	return EXIT_SUCCESS;
+	//return EXIT_SUCCESS;
+
+
+}
+
+
+int main (int argc , char *argv[])
+{	
+	double **a, *b, *x;
+	int i,j,n;
+
+	a=(double **) malloc((n+1)*sizeof(double *));
+	b=(double *) malloc((n+1)*sizeof(double));
+	x=(double *) malloc((n+1)*sizeof(double));
+	 for(i=0;i < n+1;i++)
+	 {
+	  a[i]=(double *)malloc((n+1)*sizeof(double));
+	 }
+
+	printf("Tamanho da matriz NxN");
+	scanf("%d",&n);
+
+	printf("\n Defina a matriz A[%dx%d]\n",n,n);
+
+	for(i=0; i<= n-1; i++)
+	{
+		for(j=0; j<=n-1; j++)
+		{
+			printf("\n a[%d,%d]=  ",i+1,j+1);
+			scanf("%lf",&a[i][j]);
+		}
+	}
+	 
+	printf("\n Defina o vetor B(%d)\n",n);
+	 
+	for(i=0; i<=n-1; i++)
+	{
+	   printf("\n b[%d]=  ",i+1);
+	   scanf("%lf",&b[i]);
+	}
+
+
+	thread t1(gauss,n,a,b,x);
+	thread t2(gauss,n,a,b,x);
+	t1.join();
+	t2.join();
+	
 }
