@@ -13,7 +13,6 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="-fopenmp" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -33,9 +32,7 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp">
-			<Option compiler="gcc" use="0" buildCommand="gcc main.cpp -fopenmp -o main.o" />
-		</Unit>
+		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
