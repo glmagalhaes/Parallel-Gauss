@@ -7,7 +7,6 @@
 void swap_row(double *a, double *b, int r1, int r2, int n)
 {
 	double tmp2;
-	int i;
 
 	if (r1 == r2) return;
 	#pragma omp parallel for
@@ -17,6 +16,7 @@ void swap_row(double *a, double *b, int r1, int r2, int n)
 		p2 = mat_elem(a, r2, i, n);
 		tmp = *p1, *p1 = *p2, *p2 = tmp;
 	}
+	tmp2 = b[r1], b[r1] = b[r2], b[r2] = tmp2;
 }
 
 void gauss_eliminate(double *a, double *b, double *x, int n)
@@ -24,11 +24,11 @@ void gauss_eliminate(double *a, double *b, double *x, int n)
 #define A(y, x) (*mat_elem(a, y, x, n))
 	int i, j, col, row, max_row,dia;
 	double max;
-
+	
 	for (dia = 0; dia < n; dia++) {
 		max_row = dia, max = A(dia, dia);
-
-        #pragma omp parallel for
+		
+        // aqui deu 
 		for (row = dia + 1; row < n; row++){
             double tmp;
 			if ((tmp = fabs(A(row, dia))) > max)
@@ -36,19 +36,18 @@ void gauss_eliminate(double *a, double *b, double *x, int n)
 		}
 		swap_row(a, b, dia, max_row, n);
 
-        #pragma omp parallel for
+
 		for (row = dia + 1; row < n; row++) {
             double tmp;
 			tmp = A(row, dia) / A(dia, dia);
-
+			// aqui deu 
 			for (col = dia+1; col < n; col++)
 				A(row, col) -= tmp * A(dia, col);
 			A(row, dia) = 0;
 			b[row] -= tmp * b[dia];
 		}
 	}
-
-    #pragma omp parallel for
+	
 	for (row = n - 1; row >= 0; row--) {
         double tmp;
 		tmp = b[row];
