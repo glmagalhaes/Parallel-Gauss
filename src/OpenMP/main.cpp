@@ -28,7 +28,7 @@ void gauss_eliminate(double *a, double *b, double *x, int n)
 	for (dia = 0; dia < n; dia++) {
 		max_row = dia, max = A(dia, dia);
 		
-        // aqui deu 
+        #pragma omp parallel for
 		for (row = dia + 1; row < n; row++){
             double tmp;
 			if ((tmp = fabs(A(row, dia))) > max)
@@ -40,7 +40,7 @@ void gauss_eliminate(double *a, double *b, double *x, int n)
 		for (row = dia + 1; row < n; row++) {
             double tmp;
 			tmp = A(row, dia) / A(dia, dia);
-			// aqui deu 
+			#pragma omp parallel for
 			for (col = dia+1; col < n; col++)
 				A(row, col) -= tmp * A(dia, col);
 			A(row, dia) = 0;

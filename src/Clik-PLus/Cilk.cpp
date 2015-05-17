@@ -6,34 +6,37 @@
 
 void swap_row(double *a, double *b, int r1, int r2, int n)
 {
-	double tmp, *p1, *p2;
-	int i;
+	double tmp2;
 
 	if (r1 == r2) return;
 	cilk_for (i = 0; i < n; i++) {
+        double tmp, *p1, *p2;
 		p1 = mat_elem(a, r1, i, n);
 		p2 = mat_elem(a, r2, i, n);
 		tmp = *p1, *p1 = *p2, *p2 = tmp;
 	}
-	tmp = b[r1], b[r1] = b[r2], b[r2] = tmp;
+	tmp2 = b[r1], b[r1] = b[r2], b[r2] = tmp2;
 }
 
 void gauss_eliminate(double *a, double *b, double *x, int n)
 {
 #define A(y, x) (*mat_elem(a, y, x, n))
 	int i, j, col, row, max_row,dia;
-	double max, tmp;
-
-	cilk_for (dia = 0; dia < n; dia++) {
+	double max;
+	
+	for (dia = 0; dia < n; dia++) {
 		max_row = dia, max = A(dia, dia);
-
-		cilk_for (row = dia + 1; row < n; row++)
+		
+        cilk_for (row = dia + 1; row < n; row++){
+            double tmp;
 			if ((tmp = fabs(A(row, dia))) > max)
 				max_row = row, max = tmp;
-
+		}
 		swap_row(a, b, dia, max_row, n);
 
-		cilk_for (row = dia + 1; row < n; row++) {
+
+		for (row = dia + 1; row < n; row++) {
+            double tmp;
 			tmp = A(row, dia) / A(dia, dia);
 			cilk_for (col = dia+1; col < n; col++)
 				A(row, col) -= tmp * A(dia, col);
@@ -41,9 +44,12 @@ void gauss_eliminate(double *a, double *b, double *x, int n)
 			b[row] -= tmp * b[dia];
 		}
 	}
-	cilk_for (row = n - 1; row >= 0; row--) {
+	
+	for (row = n - 1; row >= 0; row--) {
+        double tmp;
 		tmp = b[row];
-		cilk_for (j = n - 1; j > row; j--)
+
+		for (j = n - 1; j > row; j--)
 			tmp -= x[j] * A(row, j);
 		x[row] = tmp / A(row, row);
 	}
