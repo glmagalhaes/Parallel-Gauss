@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1431712809 source:c:\users\gustavo\desktop\gaussian elimination\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
