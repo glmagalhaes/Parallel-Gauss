@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <iostream>
+#include <functional>
+#include <sys/time.h>
 
 #define mat_elem(a, y, x, n) (a + ((y) * (n) + (x)))
 
@@ -52,6 +55,8 @@ void gauss_eliminate(double *a, double *b, double *x, int n)
 
 int main(void)
 {
+	struct timeval start, end;
+	long int tempo_micro_segundos;
 	double a[] = {
 		1.00, 0.00, 0.00,  0.00,  0.00, 0.00,
 		1.00, 0.63, 0.39,  0.25,  0.16, 0.10,
@@ -63,8 +68,15 @@ int main(void)
 	double b[] = { -0.01, 0.61, 0.91, 0.99, 0.60, 0.02 };
 	double x[6];
 	int i;
+	
+	gettimeofday(&start, NULL);
 
 	gauss_eliminate(a, b, x, 6);
+	
+	gettimeofday(&end, NULL);
+	tempo_micro_segundos = (end.tv_sec*1e6 + end.tv_usec) - (start.tv_sec*1e6 + start.tv_usec);
+	 
+	printf("%li\n", tempo_micro_segundos);
 
 	for (i = 0; i < 6; i++)
 		printf("%g\n", x[i]);
